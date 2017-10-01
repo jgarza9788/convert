@@ -6,6 +6,10 @@ import {ipcRenderer} from "electron";
 export const addVideos = videos => dispatch => 
 {
   ipcRenderer.send('videos:added',videos);
+  ipcRenderer.on('metadata:complete',(event,videosWithData)=>
+  {
+    dispatch({type: ADD_VIDEOS,payload:videosWithData});
+  });
 };
 
 
@@ -15,7 +19,11 @@ export const addVideos = videos => dispatch =>
 // conversion.
 export const convertVideos = () => (dispatch, getState) => 
 {
-
+  ipcRenderer.send('conversion:start',videos);
+  // ipcRenderer.on('metadata:complete',(event,videosWithData)=>
+  // {
+  //   dispatch({type: ADD_VIDEOS,payload:videosWithData});
+  // });
 };
 
 // TODO: Open the folder that the newly created video
