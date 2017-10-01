@@ -16,7 +16,8 @@ const VIDEO_FORMATS = [
 
 class VideoList extends Component {
 
-  showStatus({ complete, timemark, outputPath, err }) {
+  showStatus({ complete, timemark, outputPath, err }) 
+  {
     if (complete) {
       return (
         <button onClick={() => this.props.onFolderOpen(outputPath)} className="btn">
@@ -29,7 +30,8 @@ class VideoList extends Component {
     return '';
   }
 
-  renderProgressBar = ({duration, timemark, complete}) => {
+  renderProgressBar = ({duration, timemark, complete}) => 
+  {
     if (timemark) {
       return `${100 - (moment.duration(timemark).asMilliseconds() / (duration * 10))}%`;
     } else if (complete) {

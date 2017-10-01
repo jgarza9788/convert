@@ -8,11 +8,14 @@ export const addVideos = videos => dispatch =>
   ipcRenderer.send('videos:added',videos);
   ipcRenderer.on('metadata:complete',(event,videosWithData)=>
   {
+    console.log("src\\actions\\index.js-addVideos:: \n" + videosWithData)
     dispatch({type: ADD_VIDEOS,payload:videosWithData});
   });
 
-
 };
+
+
+
 
 
 // TODO: Communicate to MainWindow that the user wants
@@ -25,14 +28,12 @@ export const convertVideos = videos => dispatch =>
   console.log(videos);
   ipcRenderer.send('conversion:start', videos);
 
-  ipcRenderer.on('conversion:end', (event, { videos, outputPath }) => 
-  {
-    dispatch({ type: VIDEO_COMPLETE, payload: { videos, outputPath } });
+  ipcRenderer.on('conversion:end', (event, { video, outputPath }) => {
+    dispatch({ type: VIDEO_COMPLETE, payload: { ...video, outputPath } });
   });
 
-  ipcRenderer.on('conversion:progress', (event, { videos, timemark }) => 
-  {
-    dispatch({ type: VIDEO_PROGRESS, payload: { videos, timemark }});
+  ipcRenderer.on('conversion:progress', (event, { video, timemark }) => {
+    dispatch({ type: VIDEO_PROGRESS, payload: { ...video, timemark }});
   });
 };
 
@@ -44,7 +45,8 @@ export const showInFolder = outputPath => dispatch =>
 };
 
 
-export const addVideo = video => {
+export const addVideo = video => 
+{
   return {
     type: ADD_VIDEO,
     payload: { ...video }

@@ -93,32 +93,42 @@ ipcMain.on('videos:added', (event, videos)=>
 
 ipcMain.on('conversion:start', (event, videos) => 
 {
-    console.log(videos[0]);
+    // console.log(videos[0]);
+
+    // for (i = 0; i < videos.length; i++) 
+    // { 
+    //   console.log(i);
+    //   console.log(videos[i]);
+    //   videos[i].timemark = this.props.videos[i+1].timemark;
+    // }
 
     _.each(videos, video => 
     {
-        console.log(video);
-        console.log(video.name);
-        console.log(video.path);
-
+        // console.log("this video::");
+        // console.log(video);
+        // console.log(video.name);
+        // console.log(video.path);
+        // console.log(video.timemark);
 
         const outputDirectory = video.path.split(video.name)[0];
         const outputName = video.name.split('.')[0]
         const outputPath = `${outputDirectory}${outputName}.${video.format}`;
         
-        console.log(outputDirectory);
-        console.log(outputName);
-        console.log(outputPath);
+        // console.log(outputDirectory);
+        // console.log(outputName);
+        // console.log(outputPath);
+
+        // mainWindow.webContents.send('conversion:video', video);
 
         ffmpeg(video.path)
-        .output(outputPath)
-        .on('progress', ({ timemark }) =>
+            .output(outputPath)
+            .on('progress', ({ timemark }) =>
             mainWindow.webContents.send('conversion:progress', { video, timemark })
-        )
-        .on('end', () =>
+            )
+            .on('end', () =>
             mainWindow.webContents.send('conversion:end', { video, outputPath })
-        )
-        .run();
+            )
+            .run();
     });
   });
   
