@@ -10,6 +10,8 @@ export const addVideos = videos => dispatch =>
   {
     dispatch({type: ADD_VIDEOS,payload:videosWithData});
   });
+
+  console.log(getState());
 };
 
 
@@ -17,12 +19,20 @@ export const addVideos = videos => dispatch =>
 // to start converting videos.  Also listen for feedback
 // from the MainWindow regarding the current state of
 // conversion.
-export const convertVideos = () => (dispatch, getState) => 
+export const convertVideos = videosWithData => dispatch => 
 {
-  ipcRenderer.send('conversion:start',videos);
-  // ipcRenderer.on('metadata:complete',(event,videosWithData)=>
+  console.log(dispatch);
+  console.log(videosWithData);
+  // ipcRenderer.send('conversion:start', videos);
+
+  // ipcRenderer.on('conversion:end', (event, { video, outputPath }) => 
   // {
-  //   dispatch({type: ADD_VIDEOS,payload:videosWithData});
+  //   dispatch({ type: VIDEO_COMPLETE, payload: { ...video, outputPath } });
+  // });
+
+  // ipcRenderer.on('conversion:progress', (event, { video, timemark }) => 
+  // {
+  //   dispatch({ type: VIDEO_PROGRESS, payload: { ...video, timemark }});
   // });
 };
 
@@ -30,8 +40,9 @@ export const convertVideos = () => (dispatch, getState) =>
 // exists in
 export const showInFolder = outputPath => dispatch => 
 {
-
+  ipcRenderer.send('folder:open', outputPath);
 };
+
 
 export const addVideo = video => {
   return {
