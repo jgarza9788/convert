@@ -1,7 +1,7 @@
 const electron = require('electron');
 const ffmpeg = require('fluent-ffmpeg')
 const _ = require('lodash');
-const {app, BrowserWindow, ipcMain} = electron;
+const {app, BrowserWindow, ipcMain, shell} = electron;
 
 const path = require('path');
 
@@ -94,33 +94,36 @@ ipcMain.on('videos:added', (event, videos)=>
 ipcMain.on('conversion:start', (event, videos) => 
 {
     console.log(videos[0]);
-    // console.log("video.path: "+  videos[0].path);
-    // console.log("video.name: "+  videos[0].name);
-    // console.log("video.format: "+  videos[0].format);
 
-    // _.each(videos, video => 
-    // {
-    //     console.log("video.path: "+  video.path);
-    //     console.log("video.name: "+  video.name);
-    //     console.log("video.format: "+  video.format);
+    _.each(videos, video => 
+    {
+        console.log(video);
+        console.log(video.name);
+        console.log(video.path);
 
-    //     const outputDirectory = video.path.split(video.name)[0];
-    //     const outputName = video.name.split('.')[0]
-    //     const outputPath = `${outputDirectory}${outputName}.${video.format}`;
+
+        const outputDirectory = video.path.split(video.name)[0];
+        const outputName = video.name.split('.')[0]
+        const outputPath = `${outputDirectory}${outputName}.${video.format}`;
         
+        console.log(outputDirectory);
+        console.log(outputName);
+        console.log(outputPath);
 
-    //     ffmpeg(video.path)
-    //     .output(outputPath)
-    //     .on('progress', ({ timemark }) =>
-    //         mainWindow.webContents.send('conversion:progress', { video, timemark })
-    //     )
-    //     .on('end', () =>
-    //         mainWindow.webContents.send('conversion:end', { video, outputPath })
-    //     )
-    //     .run();
-    // });
+        ffmpeg(video.path)
+        .output(outputPath)
+        .on('progress', ({ timemark }) =>
+            mainWindow.webContents.send('conversion:progress', { video, timemark })
+        )
+        .on('end', () =>
+            mainWindow.webContents.send('conversion:end', { video, outputPath })
+        )
+        .run();
+    });
   });
   
-  ipcMain.on('folder:open', (event, outputPath) => {
+  ipcMain.on('folder:open', (event, outputPath) => 
+  {
+    console.log("outputPath: " + outputPath);
     shell.showItemInFolder(outputPath);
   });

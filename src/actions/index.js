@@ -11,7 +11,7 @@ export const addVideos = videos => dispatch =>
     dispatch({type: ADD_VIDEOS,payload:videosWithData});
   });
 
-  console.log(getState());
+
 };
 
 
@@ -19,21 +19,21 @@ export const addVideos = videos => dispatch =>
 // to start converting videos.  Also listen for feedback
 // from the MainWindow regarding the current state of
 // conversion.
-export const convertVideos = videosWithData => dispatch => 
+export const convertVideos = videos => dispatch => 
 {
-  console.log(dispatch);
-  console.log(videosWithData);
-  // ipcRenderer.send('conversion:start', videos);
 
-  // ipcRenderer.on('conversion:end', (event, { video, outputPath }) => 
-  // {
-  //   dispatch({ type: VIDEO_COMPLETE, payload: { ...video, outputPath } });
-  // });
+  console.log(videos);
+  ipcRenderer.send('conversion:start', videos);
 
-  // ipcRenderer.on('conversion:progress', (event, { video, timemark }) => 
-  // {
-  //   dispatch({ type: VIDEO_PROGRESS, payload: { ...video, timemark }});
-  // });
+  ipcRenderer.on('conversion:end', (event, { videos, outputPath }) => 
+  {
+    dispatch({ type: VIDEO_COMPLETE, payload: { videos, outputPath } });
+  });
+
+  ipcRenderer.on('conversion:progress', (event, { videos, timemark }) => 
+  {
+    dispatch({ type: VIDEO_PROGRESS, payload: { videos, timemark }});
+  });
 };
 
 // TODO: Open the folder that the newly created video
